@@ -29,7 +29,7 @@ gdt_ptr_t gdt_ptr;
 gdt_segment_descriptor_t gdt[GDT_SIZE];
 
 // Defined in ASM
-extern void reset_gdt_registers(unsigned int gdt_ptr_address);
+extern void flush_gdt(unsigned int gdt_ptr_address);
 extern void store_gdt_ptr(unsigned int gdt_ptr_address);
 
 void gdt_init();

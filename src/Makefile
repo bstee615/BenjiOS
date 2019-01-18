@@ -12,6 +12,8 @@ IMG = mykernel.elf
 # test: $(TEST)
 # 	gcc $(patsubst %.o,$(OBJ)/%.o,$(TEST)) -o $(BIN)/$(IMG) -lgcc
 
+default: os
+
 urn:
 	echo "They'll do that for you when you're dead, dummy."
 
