@@ -1,4 +1,0 @@
-MOV     AX,5307
-MOV     BX,0001
-MOV     CX,0003
-INT     15

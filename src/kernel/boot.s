@@ -1,4 +1,4 @@
-extern kernel_main
+extern kmain
 
 MB_ALIGN	equ	1 << 0
 MB_MEMINFO	equ	1 << 1
@@ -24,15 +24,15 @@ section .bss:
 ;		dd idt
 ;		dw IDT_SIZE
 
-	stack_bottom:
-		times 4096 db 0 ; 4Kb stack
-	stack_top:
+	kstack_top:
+		times 4096 db 0 ; 4Kb stack for use in  bootloader
+	kstack_bottom:
  
 section .text:
 global start:function (start.end - start)
 start:
 	; Set up stack
-	mov esp, stack_top
+	mov esp, kstack_bottom
 	
 	; Set up IDT
 ;	lidt [idt_description]
@@ -44,7 +44,7 @@ start:
 	; 3. Load the Global Descriptor Table with segment descriptors suitable for code, data, and stack. 
 
 	; Enter kernel 
-	call kernel_main
+	call kmain
 
 	; The kernel's main function should not return, but if it does then hang the CPU.
 	; This approach (hlt) is more smarter (power-efficient) than the infinite loop.

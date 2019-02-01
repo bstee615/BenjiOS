@@ -1,3 +1,4 @@
+# TODO: Not integrated or in the Makefile yet.
 global getc
 
 section .data

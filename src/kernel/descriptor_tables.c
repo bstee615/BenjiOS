@@ -1,4 +1,4 @@
-#include "gdt.h"
+#include "descriptor_tables.h"
 
 //Internal method
 void set_gdt_segment_descriptor(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran)
@@ -27,5 +27,5 @@ void gdt_init()
 	set_gdt_segment_descriptor(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); // User code segment
 	set_gdt_segment_descriptor(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); // User data segment
 
-	flush_gdt((uint32_t)&gdt_ptr);
+	load_gdt((uint32_t)&gdt_ptr);
 }

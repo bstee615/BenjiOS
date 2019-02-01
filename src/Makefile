@@ -1,16 +1,20 @@
 ROOTDIR = ..
 OBJ = $(ROOTDIR)/obj
 BIN = $(ROOTDIR)/bin
-SRC = kernel.o boot.o gdt.o flush_gdt.o store_gdt_ptr.o sidt.o io.o
-# TEST = test-test_gdt_segments.o $(patsubst %.o,test-%.o,$(GDT))
+
+HEADERS = libc kernel
+INCLUDE = $(addprefix -I, $(HEADERS))
+
+KERNEL = $(addprefix kernel/, boot descriptor_tables gdt irq sidt terminal kmain pm)
+LIBC = $(addprefix libc/, math)
+
+SRC = $(KERNEL) $(LIBC) # Add chunks of source here.
+OBJS = $(addsuffix .o, $(SRC))
 
 CC = i686-elf-gcc
-FLAGS = -ffreestanding -std=gnu99 -c
+FLAGS = -ffreestanding -std=gnu99 -nostdlib -g
 
 IMG = mykernel.elf
-
-# test: $(TEST)
-# 	gcc $(patsubst %.o,$(OBJ)/%.o,$(TEST)) -o $(BIN)/$(IMG) -lgcc
 
 default: os
 
@@ -27,18 +31,15 @@ run-monitor: os
 	qemu-system-i386 -monitor stdio -s -kernel $(BIN)/$(IMG)
 
 clean:
-	rm $(OBJ)/*.o
-	rm $(BIN)/*.elf
+	rm $(OBJ)/*.o 2> /dev/null || true
+	rm $(BIN)/*.elf 2> /dev/null || true
 
-os: $(SRC)
-	i686-elf-gcc -ffreestanding -nostdlib -g -T linker.ld $(patsubst %.o,$(OBJ)/%.o,$(SRC)) -o $(BIN)/$(IMG) -lgcc
-
-# test-%.o: %.s
-# 	nasm $< -o $(OBJ)/test-$@
-# test-%.o: %.c
-# 	gcc $< -o $(OBJ)/test-$@
+os: $(OBJS)
+	$(CC) $(FLAGS) -T linker.ld $(patsubst %.o,$(OBJ)/%.o,$(OBJS)) -o $(BIN)/$(IMG) -lgcc
 
 %.o: %.s
+	mkdir -p $(dir $(OBJ)/$@)
 	nasm -f elf32 $< -o $(OBJ)/$@
 %.o: %.c
-	$(CC) $(FLAGS) $< -o $(OBJ)/$@
+	mkdir -p $(dir $(OBJ)/$@)
+	$(CC) $(FLAGS) $(INCLUDE) -c $< -o $(OBJ)/$@
