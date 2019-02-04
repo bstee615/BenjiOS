@@ -5,7 +5,7 @@ BIN = $(ROOTDIR)/bin
 HEADERS = libc kernel
 INCLUDE = $(addprefix -I, $(HEADERS))
 
-KERNEL = $(addprefix kernel/, boot descriptor_tables gdt irq sidt terminal kmain pm)
+KERNEL = $(addprefix kernel/, boot descriptor_tables gdt irq sidt terminal kmain pm io serial)
 LIBC = $(addprefix libc/, math)
 
 SRC = $(KERNEL) $(LIBC) # Add chunks of source here.
@@ -22,13 +22,10 @@ urn:
 	echo "They'll do that for you when you're dead, dummy."
 
 run: os
-	qemu-system-i386 -s -kernel $(BIN)/$(IMG)
-
-run-test: test
-	$(BIN)/test_gdt_segments
+	qemu-system-i386 -s -serial file:qemu_serial.log -kernel $(BIN)/$(IMG)
 
 run-monitor: os
-	qemu-system-i386 -monitor stdio -s -kernel $(BIN)/$(IMG)
+	qemu-system-i386 -monitor stdio -s -serial file:qemu_serial.log -kernel $(BIN)/$(IMG)
 
 clean:
 	rm $(OBJ)/*.o 2> /dev/null || true

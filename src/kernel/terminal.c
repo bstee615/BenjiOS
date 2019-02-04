@@ -1,5 +1,6 @@
 #include "terminal.h"
 #include "math.h"
+#include <stdarg.h>
 
 volatile uint16_t* vga_buffer = (uint16_t*)0xB8000;
 
@@ -64,6 +65,15 @@ void term_putc(char c, char color)
 	}
 }
 
+void enable_cursor(uint8_t cursor_start, uint8_t cursor_end)
+{
+	outb(0x3D4, 0x0A);
+	outb(0x3D5, (inb(0x3D5) & 0xC0) | cursor_start);
+ 
+	outb(0x3D4, 0x0B);
+	outb(0x3D5, (inb(0x3D5) & 0xE0) | cursor_end);
+}
+
 void term_init()
 {
 	for (int col = 0; col < VGA_COLS; col ++)
@@ -74,6 +84,7 @@ void term_init()
 			vga_buffer[index] = ((unsigned short)vga_color_white << 8) | ' ';
 		}
 	}
+	enable_cursor(0, 15);
 }
 
 void term_print(const char* str)
@@ -119,4 +130,49 @@ void term_print_with_int(const char* str, int num)
 			term_putc(str[i], vga_color_white);
 		}
 	}
+}
+
+void update_cursor(int x, int y)
+{
+	uint16_t pos = y * VGA_COLS + x;
+ 
+	outb(0x3D4, 0x0F);
+	outb(0x3D5, (uint8_t) (pos & 0xFF));
+	outb(0x3D4, 0x0E);
+	outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+}
+
+void term_printf(const char *fmt, ...) {
+   va_list valist;
+
+   char *c;
+   int num_fmts = 0;
+   for (c = (char*)fmt; *c != 0; c++) {
+      if (*c == '%') num_fmts ++;
+   }
+
+   /* initialize valist for num number of arguments */
+   va_start(valist, num_fmts);
+
+   for (c = (char *)fmt; *c != 0; c++) {
+      if (*c == '%') {
+         c ++; // Move c to point at the format specifier.
+         switch (*c) {
+            case 'd':
+               term_putint(va_arg(valist, int));
+               break;
+            case 's':
+               term_print(va_arg(valist, const char *));
+               break;
+         }
+      }
+      else {
+         term_putc(*c, vga_color_white);
+      }
+   }
+	
+   /* clean memory reserved for valist */
+   va_end(valist);
+
+   update_cursor(term_col, term_row);
 }

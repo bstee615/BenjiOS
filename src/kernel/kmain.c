@@ -6,8 +6,11 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include "terminal.h"
 #include "pm.h"
+
+#include "terminal.h"
+#include "serial.h"
+#include "io.h"
 
 void kmain()
 {
@@ -16,7 +19,10 @@ void kmain()
 
 	term_init();
 
+	serial_init();
+
+	serial_printf("%s, Benji! %d", "Hello", 1243);
+
 	// """"""""""user"""""""""" code
-	term_print("Hello, world!\n");
-	term_print("Welcome to BenjiOS.\n");
+	term_printf("Hello, world!\n%s version %d.", "Welcome to BenjiOS", 1);
 }
