@@ -1,5 +1,5 @@
 #include "serial.h"
-#include <stdarg.h>
+#include "stdarg.h"
 #include "math.h"
 
 #define PORT 0x3f8   /* COM1 */
@@ -74,7 +74,7 @@ void serial_printf(const char *fmt, ...) {
    }
 
    /* initialize valist for num number of arguments */
-   va_start(valist, num_fmts);
+   va_start(valist, fmt);
 
    for (c = (char *)fmt; *c != 0; c++) {
       if (*c == '%') {
