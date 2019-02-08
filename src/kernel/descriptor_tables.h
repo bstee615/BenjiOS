@@ -70,12 +70,21 @@ struct idt_descriptor_t {
 	uint8_t type_and_attr;
 	uint16_t offset_upp_16;
 } __attribute__((packed));
+typedef struct idt_descriptor_t idt_descriptor_t;
 
 struct idt_ptr_t {
 	uint16_t limit;
 	uint32_t base;
 } __attribute__((packed));
+typedef struct idt_ptr_t idt_ptr_t;
 
+extern void load_idt(uint32_t addr);
+
+#define NUM_IRQS 256
+idt_descriptor_t idt[NUM_IRQS];
+idt_ptr_t idt_ptr;
+
+void set_irq_handler(uint8_t index, uint32_t offset);
 void idt_init();
 
 #endif

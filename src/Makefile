@@ -11,13 +11,14 @@ OS = benjios
 IMG = $(OS).bin
 XORRISO = ../../xorriso/xorriso-1.3.0/xorriso/xorriso
 
-HEADERS = libc libc/stdlib kernel
+HEADERS = libc libc/stdlib kernel test
 INCLUDE = $(addprefix -I, $(HEADERS))
 
-KERNEL = $(addprefix kernel/, boot descriptor_tables gdt irq sidt terminal kmain pm io serial)
+KERNEL = $(addprefix kernel/, boot descriptor_tables gdt irq sidt terminal kmain pm io serial idt)
 LIBC = $(addprefix libc/, math)
+TEST = $(addprefix test/, test_irq)
 
-SRC = $(KERNEL) $(LIBC) # Add chunks of source here.
+SRC = $(KERNEL) $(LIBC) $(TEST) # Add chunks of source here.
 OBJ = $(addsuffix .o, $(SRC))
 
 CC = i686-elf-gcc
@@ -38,19 +39,19 @@ urn:
 pre-img:
 	$(call notice_me, "Creating os image: $(ISODIR)/$(OS).iso.")
 img: os pre-img
-	cp $(BINDIR)/$(OS).bin $(IMGDIR)
+	cp $(BINDIR)/$(OS).bin $(IMGDIR)/$(OS).bin
 	if rm $(ISODIR)/$(OS).iso 2> /dev/null; then $(call notice_me, "grub-mkrescue: removed previous image: $(OS).iso."); fi
 	grub-mkrescue -o $(ISODIR)/$(OS).iso --xorriso=$(XORRISO) $(ISODIR)
 
 qemu: img
-	$(QEMU) -s -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
+	$(QEMU) -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
 
 qemu-d: img
 	objcopy --only-keep-debug $(IMGDIR)/$(OS).bin $(IMGDIR)/$(OS).sym
 	$(QEMU) -s -S -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
 
 qemu-monitor: img
-	$(QEMU) -monitor stdio -s -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
+	$(QEMU) -monitor stdio -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
 
 clean:
 	rm -r $(OBJDIR)/*.o 2> /dev/null || true

@@ -4,8 +4,6 @@ extern flush_gdt
 global pm_init
 
 pm_init:
-	cli
-
 	call gdt_init ; Load the GDT
 
     ; enable protected mode

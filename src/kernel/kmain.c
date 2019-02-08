@@ -10,17 +10,30 @@
 #include "terminal.h"
 #include "serial.h"
 #include "io.h"
+#include "irq.h"
+#include "test_irq.h"
 
-void kmain()
-{
-	// Enter protected mode
+// Initialize core services that require IRQ and NMI to be disabled.
+void sys_init() {
+	disable_irq();
+	disable_nmi();
+
 	pm_init();
+	idt_init();
+
+	enable_irq();
+	enable_nmi();
+}
+
+void kmain() {
+	sys_init();
 
 	term_init();
-
 	serial_init();
 
 	serial_printf("%s, Benji! %d", "Hello", 1243);
+
+	test_irq();
 
 	// """"""""""user"""""""""" code
 	term_printf("Hello, world!\n%s version %d.", "Welcome to BenjiOS", 1);

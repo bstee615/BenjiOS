@@ -28,7 +28,7 @@ int is_transmit_empty() {
    return inb(PORT + 5) & 0x20;
 }
  
-void write_serial(char a) {
+void serial_putc(char a) {
    while (is_transmit_empty() == 0);
  
    outb(PORT, a);
@@ -36,7 +36,7 @@ void write_serial(char a) {
 
 void write_serial_int(int num) {
 	if (num < 0) {
-		write_serial('-');
+		serial_putc('-');
 		num = -num;
 	}
 
@@ -49,18 +49,18 @@ void write_serial_int(int num) {
 
 	while (num_digits > 1) {
 		num = num % pow(10, (num_digits));
-		write_serial((num / pow(10, num_digits-1)) + '0');
+		serial_putc((num / pow(10, num_digits-1)) + '0');
 
 		num_digits --;
 	}
 	num = num % pow(10, (num_digits));
-	write_serial(num + '0');
+	serial_putc(num + '0');
 }
 
 void write_serial_string(const char *str) {
    char *c;
    for (c = (char*)str; *c != 0; c ++) {
-      write_serial(*c);
+      serial_putc(*c);
    }
 }
 
@@ -89,7 +89,7 @@ void serial_printf(const char *fmt, ...) {
          }
       }
       else {
-         write_serial(*c);
+         serial_putc(*c);
       }
    }
 	
