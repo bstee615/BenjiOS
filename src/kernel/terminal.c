@@ -1,6 +1,7 @@
 #include "terminal.h"
 #include "math.h"
-#include <stdarg.h>
+#include "stdarg.h"
+#include "io.h"
 
 volatile uint16_t* vga_buffer = (uint16_t*)0xB8000;
 
@@ -152,7 +153,7 @@ void term_printf(const char *fmt, ...) {
    }
 
    /* initialize valist for num number of arguments */
-   va_start(valist, num_fmts);
+   va_start(valist, fmt);
 
    for (c = (char *)fmt; *c != 0; c++) {
       if (*c == '%') {

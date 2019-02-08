@@ -1,42 +1,79 @@
 ROOTDIR = ..
-OBJ = $(ROOTDIR)/obj
-BIN = $(ROOTDIR)/bin
+OBJDIR = $(ROOTDIR)/obj
+BINDIR = $(ROOTDIR)/bin
+ISODIR = $(ROOTDIR)/boot
+IMGDIR = $(ISODIR)/boot
 
-HEADERS = libc kernel
+RED = \033[0;31m
+NC = \033[0m
+
+OS = benjios
+IMG = $(OS).bin
+XORRISO = ../../xorriso/xorriso-1.3.0/xorriso/xorriso
+
+HEADERS = libc libc/stdlib kernel
 INCLUDE = $(addprefix -I, $(HEADERS))
 
 KERNEL = $(addprefix kernel/, boot descriptor_tables gdt irq sidt terminal kmain pm io serial)
 LIBC = $(addprefix libc/, math)
 
 SRC = $(KERNEL) $(LIBC) # Add chunks of source here.
-OBJS = $(addsuffix .o, $(SRC))
+OBJ = $(addsuffix .o, $(SRC))
 
 CC = i686-elf-gcc
+QEMU = qemu-system-i386
 FLAGS = -ffreestanding -std=gnu99 -nostdlib -g
 
-IMG = mykernel.elf
+# echo $(call notice_me, "")
+define notice_me
+echo "$(RED)$(1)$(NC)"
+endef
 
-default: os
+default: img
 
 urn:
 	echo "They'll do that for you when you're dead, dummy."
 
-run: os
-	qemu-system-i386 -s -serial file:qemu_serial.log -kernel $(BIN)/$(IMG)
+# Copy os image over to boot dir and make a bootable disk image.
+pre-img:
+	$(call notice_me, "Creating os image: $(ISODIR)/$(OS).iso.")
+img: os pre-img
+	cp $(BINDIR)/$(OS).bin $(IMGDIR)
+	if rm $(ISODIR)/$(OS).iso 2> /dev/null; then $(call notice_me, "grub-mkrescue: removed previous image: $(OS).iso."); fi
+	grub-mkrescue -o $(ISODIR)/$(OS).iso --xorriso=$(XORRISO) $(ISODIR)
 
-run-monitor: os
-	qemu-system-i386 -monitor stdio -s -serial file:qemu_serial.log -kernel $(BIN)/$(IMG)
+qemu: img
+	$(QEMU) -s -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
+
+qemu-d: img
+	objcopy --only-keep-debug $(IMGDIR)/$(OS).bin $(IMGDIR)/$(OS).sym
+	$(QEMU) -s -S -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
+
+qemu-monitor: img
+	$(QEMU) -monitor stdio -s -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
 
 clean:
-	rm $(OBJ)/*.o 2> /dev/null || true
-	rm $(BIN)/*.elf 2> /dev/null || true
+	rm -r $(OBJDIR)/*.o 2> /dev/null || true
+	rm -r $(BINDIR)/*.bin 2> /dev/null || true
+	rm -r $(BINDIR)/*.iso 2> /dev/null || true
+	rm -r $(ISODIR)/*.bin 2> /dev/null || true
+	rm -r $(ISODIR)/*.iso 2> /dev/null || true
 
-os: $(OBJS)
-	$(CC) $(FLAGS) -T linker.ld $(patsubst %.o,$(OBJ)/%.o,$(OBJS)) -o $(BIN)/$(IMG) -lgcc
+# Create or check existence of directories for object files.
+objdirs:
+	echo $(HEADERS) | tr " " "\n" | while read -r dirname; do mkdir -p $(OBJDIR)/$$dirname; done
+
+pre-all:
+	$(call notice_me, "Compiling all source files into: $(OBJDIR).")
+all: pre-all objdirs $(OBJ)
+
+# Make os image and place it in BIN dir.
+pre-os:
+	$(call notice_me, "Linking all object files into: $(BINDIR)/$(IMG)")
+os: all pre-os
+	$(CC) $(FLAGS) -T linker.ld $(patsubst %.o,$(OBJDIR)/%.o,$(OBJ)) -o $(BINDIR)/$(IMG) -lgcc
 
 %.o: %.s
-	mkdir -p $(dir $(OBJ)/$@)
-	nasm -f elf32 $< -o $(OBJ)/$@
+	nasm -f elf32 $< -o $(OBJDIR)/$@
 %.o: %.c
-	mkdir -p $(dir $(OBJ)/$@)
-	$(CC) $(FLAGS) $(INCLUDE) -c $< -o $(OBJ)/$@
+	$(CC) $(FLAGS) $(INCLUDE) -c $< -o $(OBJDIR)/$@

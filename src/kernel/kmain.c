@@ -4,8 +4,7 @@
 	#error This code must be compiled with an x86-elf compiler
 #endif
 
-#include <stddef.h>
-#include <stdint.h>
+#include "stdint.h"
 #include "pm.h"
 
 #include "terminal.h"

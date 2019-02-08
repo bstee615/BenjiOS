@@ -1,7 +1,7 @@
 #ifndef DESCRIPTOR_TABLES_H
 #define DESCRIPTOR_TABLES_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 // GDT
 struct gdt_segment_descriptor_t
