@@ -11,14 +11,14 @@ OS = benjios
 IMG = $(OS).bin
 XORRISO = ../../xorriso/xorriso-1.3.0/xorriso/xorriso
 
-HEADERS = libc libc/stdlib kernel test
+HEADERS = libc libc/stdlib kernel #test
 INCLUDE = $(addprefix -I, $(HEADERS))
 
 KERNEL = $(addprefix kernel/, boot descriptor_tables gdt irq sidt terminal kmain pm io serial idt)
 LIBC = $(addprefix libc/, math)
-TEST = $(addprefix test/, test_irq)
+# TEST = $(addprefix test/, test_irq)
 
-SRC = $(KERNEL) $(LIBC) $(TEST) # Add chunks of source here.
+SRC = $(KERNEL) $(LIBC) #$(TEST) # Add chunks of source here.
 OBJ = $(addsuffix .o, $(SRC))
 
 CC = i686-elf-gcc
