@@ -9,7 +9,7 @@ NC = \033[0m
 
 OS = benjios
 IMG = $(OS).bin
-XORRISO = ../../xorriso/xorriso-1.3.0/xorriso/xorriso
+XORRISO = ../tools/xorriso-1.4.6/xorriso/xorriso
 
 HEADERS = libc libc/stdlib kernel #test
 INCLUDE = $(addprefix -I, $(HEADERS))
@@ -54,7 +54,10 @@ qemu-monitor: img
 	$(QEMU) -monitor stdio -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
 
 clean:
+	rm -r $(ISODIR)/boot/*.bin 2> /dev/null || true
 	rm -r $(OBJDIR)/*.o 2> /dev/null || true
+	rm -r $(OBJDIR)/kernel/*.o 2> /dev/null || true
+	rm -r $(OBJDIR)/libc/*.o 2> /dev/null || true
 	rm -r $(BINDIR)/*.bin 2> /dev/null || true
 	rm -r $(BINDIR)/*.iso 2> /dev/null || true
 	rm -r $(ISODIR)/*.bin 2> /dev/null || true
