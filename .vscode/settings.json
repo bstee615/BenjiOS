@@ -2,5 +2,6 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
         "serial.h": "c"
-    }
+    },
+    "terminal.integrated.cwd": "src"
 }

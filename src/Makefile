@@ -1,15 +1,18 @@
 ROOTDIR = ..
 OBJDIR = $(ROOTDIR)/obj
+
 BINDIR = $(ROOTDIR)/bin
 ISODIR = $(ROOTDIR)/boot
 IMGDIR = $(ISODIR)/boot
 
+OS = benjios
+ISOPATH = $(ISODIR)/$(OS).iso
+IMGPATH = $(IMGDIR)/$(OS).bin
+
 RED = \033[0;31m
 NC = \033[0m
 
-OS = benjios
 IMG = $(OS).bin
-XORRISO = ../tools/xorriso-1.4.6/xorriso/xorriso
 
 HEADERS = libc libc/stdlib kernel #test
 INCLUDE = $(addprefix -I, $(HEADERS))
@@ -21,7 +24,8 @@ LIBC = $(addprefix libc/, math)
 SRC = $(KERNEL) $(LIBC) #$(TEST) # Add chunks of source here.
 OBJ = $(addsuffix .o, $(SRC))
 
-CC = i686-elf-gcc
+XORRISO = ../tools/xorriso-1.4.6/xorriso/xorriso
+CC = ../tools/opt/cross/bin/i686-elf-gcc
 QEMU = qemu-system-i386
 FLAGS = -ffreestanding -std=gnu99 -nostdlib -g
 
@@ -37,21 +41,21 @@ urn:
 
 # Copy os image over to boot dir and make a bootable disk image.
 pre-img:
-	$(call notice_me, "Creating os image: $(ISODIR)/$(OS).iso.")
+	$(call notice_me, "Creating os image: $(ISOPATH).")
 img: os pre-img
-	cp $(BINDIR)/$(OS).bin $(IMGDIR)/$(OS).bin
-	if rm $(ISODIR)/$(OS).iso 2> /dev/null; then $(call notice_me, "grub-mkrescue: removed previous image: $(OS).iso."); fi
-	grub-mkrescue -o $(ISODIR)/$(OS).iso --xorriso=$(XORRISO) $(ISODIR)
+	cp $(BINDIR)/$(OS).bin $(IMGPATH)
+	if rm $(ISOPATH) 2> /dev/null; then $(call notice_me, "grub-mkrescue: removed previous image: $(OS).iso."); fi
+	grub-mkrescue -o $(ISOPATH) --xorriso=$(XORRISO) $(ISODIR)
 
 qemu: img
-	$(QEMU) -serial file:qemu_serial.log -cdrom $(ISODIR)/$(OS).iso
+	$(QEMU) -serial file:qemu_serial.log -cdrom $(ISOPATH)
 
 qemu-d: img
-	objcopy --only-keep-debug $(IMGDIR)/$(OS).bin $(IMGDIR)/$(OS).sym
-	$(QEMU) -s -S -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
+	objcopy --only-keep-debug $(IMGPATH) $(IMGDIR)/$(OS).sym
+	$(QEMU) -s -S -serial file:qemu_serial.log $(ISOPATH)
 
 qemu-monitor: img
-	$(QEMU) -monitor stdio -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
+	$(QEMU) -monitor stdio -serial file:qemu_serial.log $(ISOPATH)
 
 clean:
 	rm -r $(ISODIR)/boot/*.bin 2> /dev/null || true
