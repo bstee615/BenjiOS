@@ -12,5 +12,7 @@ The tools I'm currently running:
 - `gcc-9.2.0`
 - `xorriso-1.4.6`
 
+Each of these tools must be built from source to target the same architecture. The current target architecture I'm using is `i686-elf-gcc`. Check [here](https://wiki.osdev.org/GCC_Cross-Compiler) for boilerplate configurations when building from source.
+
 Cheers!
 - Benji

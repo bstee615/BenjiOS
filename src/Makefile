@@ -44,7 +44,7 @@ img: os pre-img
 	grub-mkrescue -o $(ISODIR)/$(OS).iso --xorriso=$(XORRISO) $(ISODIR)
 
 qemu: img
-	$(QEMU) -serial file:qemu_serial.log $(ISODIR)/$(OS).iso
+	$(QEMU) -serial file:qemu_serial.log -cdrom $(ISODIR)/$(OS).iso
 
 qemu-d: img
 	objcopy --only-keep-debug $(IMGDIR)/$(OS).bin $(IMGDIR)/$(OS).sym
