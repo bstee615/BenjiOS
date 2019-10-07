@@ -19,7 +19,7 @@ void sys_init()
 	disable_nmi();
 
 	pm_init();
-	idt_init();
+	// idt_init();
 
 	enable_irq();
 	enable_nmi();
