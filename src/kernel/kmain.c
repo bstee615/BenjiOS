@@ -18,8 +18,8 @@ void sys_init()
 	disable_irq();
 	disable_nmi();
 
-	pm_init();
-	// idt_init();
+	pm_init(); // Initializes the GDT, too
+	idt_init();
 
 	enable_irq();
 	enable_nmi();
@@ -27,7 +27,7 @@ void sys_init()
 
 void kmain()
 {
-	// sys_init();
+	sys_init();
 
 	term_init();
 	serial_init();
