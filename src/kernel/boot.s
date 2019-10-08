@@ -1,55 +1,45 @@
-extern kmain
+;
+; boot.s -- Kernel start location. Also defines multiboot header.
+; Based on Bran's kernel development tutorial file start.asm
+;
 
-MB_ALIGN	equ	1 << 0
-MB_MEMINFO	equ	1 << 1
-MB_FLAGS	equ	MB_ALIGN | MB_MEMINFO
-MB_MAGIC	equ	0x1BADB002
-MB_CHECKSUM	equ	-(MB_MAGIC + MB_FLAGS)
+MBOOT_PAGE_ALIGN    equ 1<<0    ; Load kernel and modules on a page boundary
+MBOOT_MEM_INFO      equ 1<<1    ; Provide your kernel with memory info
+MBOOT_HEADER_MAGIC  equ 0x1BADB002 ; Multiboot Magic value
+; NOTE: We do not use MBOOT_AOUT_KLUDGE. It means that GRUB does not
+; pass us a symbol table.
+MBOOT_HEADER_FLAGS  equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO
+MBOOT_CHECKSUM      equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 
-IDT_SIZE	equ	0100h ; 32 interrupts
- 
-section multiboot:
-align 4
-	dd MB_MAGIC
-	dd MB_FLAGS
-	dd MB_CHECKSUM
- 
-section .bss:
-	align 16
 
-	; TODO: Before implementing the IDT, implement the GDT.
-;	idt:
-;		times 0100h db 0 ; TODO: Fill with IDT gate entries
-;	idt_description:
-;		dd idt
-;		dw IDT_SIZE
+[BITS 32]                       ; All instructions should be 32-bit.
 
-	kstack_top:
-		times 4096 db 0 ; 4Kb stack for use in  bootloader
-	kstack_bottom:
- 
-section .text:
-global start:function (start.end - start)
+[GLOBAL mboot]                  ; Make 'mboot' accessible from C.
+[EXTERN code]                   ; Start of the '.text' section.
+[EXTERN bss]                    ; Start of the .bss section.
+[EXTERN end]                    ; End of the last loadable section.
+
+mboot:
+  dd  MBOOT_HEADER_MAGIC        ; GRUB will search for this value on each
+                                ; 4-byte boundary in your kernel file
+  dd  MBOOT_HEADER_FLAGS        ; How GRUB should load your file / settings
+  dd  MBOOT_CHECKSUM            ; To ensure that the above values are correct
+   
+  dd  mboot                     ; Location of this descriptor
+  dd  code                      ; Start of kernel '.text' (code) section.
+  dd  bss                       ; End of kernel '.data' section.
+  dd  end                       ; End of kernel.
+  dd  start                     ; Kernel entry point (initial EIP).
+
+[GLOBAL start]                  ; Kernel entry point.
+[EXTERN main]                   ; This is the entry point of our C code
+
 start:
-	; Set up stack
-	mov esp, kstack_bottom
-	
-	; Set up IDT
-;	lidt [idt_description]
+  push    ebx                   ; Load multiboot header location
 
-	; TODO: Before switching to protected mode, you must:
-
-	; 1. Disable interrupts, including NMI (as suggested by Intel Developers Manual).
-	; 2. Enable the A20 Line.
-	; 3. Load the Global Descriptor Table with segment descriptors suitable for code, data, and stack. 
-
-	; Enter kernel 
-	call kmain
-
-	; The kernel's main function should not return, but if it does then hang the CPU.
-	; This approach (hlt) is more smarter (power-efficient) than the infinite loop.
-	.hang:
-		cli
-		hlt
-		jmp .hang
-	.end:
+  ; Execute the kernel:
+  cli                         ; Disable interrupts.
+  call main                   ; call our main() function.
+  jmp $                       ; Enter an infinite loop, to stop the processor
+                              ; executing whatever rubbish is in the memory
+                              ; after our kernel!
