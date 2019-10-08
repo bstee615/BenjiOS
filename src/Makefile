@@ -17,7 +17,7 @@ IMG = $(OS).bin
 HEADERS = libc libc/stdlib kernel #test
 INCLUDE = $(addprefix -I, $(HEADERS))
 
-KERNEL = $(addprefix kernel/, boot descriptor_tables gdt irq sidt terminal kmain pm io serial idt isr isr_wrapper test_irq)
+KERNEL = $(addprefix kernel/, boot descriptor_tables gdt irq sidt terminal kmain pm io serial idt isr isr_wrapper test_irq irq_handler timer)
 LIBC = $(addprefix libc/, math)
 # TEST = $(addprefix test/, test_irq)
 

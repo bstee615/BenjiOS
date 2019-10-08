@@ -26,10 +26,10 @@ void gdt_init()
 	// We are defining a flat memory model, where every segment can access
 	//  addresses 0 to 2^32-1.
 	set_gdt_segment_descriptor(0, 0, 0, 0, 0);				  // First entry must always be null
-	set_gdt_segment_descriptor(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); // Kernel code segment
-	set_gdt_segment_descriptor(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // Kernel data segment
-	set_gdt_segment_descriptor(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); // User code segment
-	set_gdt_segment_descriptor(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); // User data segment
+	set_gdt_segment_descriptor(1, 0, 0x0000FFFF, 0x9A, 0xCF); // Kernel code segment
+	set_gdt_segment_descriptor(2, 0, 0x0000FFFF, 0x92, 0xCF); // Kernel data segment
+	set_gdt_segment_descriptor(3, 0, 0x0000FFFF, 0xFA, 0xCF); // User code segment
+	set_gdt_segment_descriptor(4, 0, 0x0000FFFF, 0xF2, 0xCF); // User data segment
 
 	load_gdt((uint32_t)&gdt_ptr);
 
@@ -37,10 +37,11 @@ void gdt_init()
 }
 
 // Sets the offset of IRQ at index and enables it (sets bit P).
-void set_irq_handler(uint8_t index, uint8_t flags, uint32_t offset)
+void set_irq_handler(uint8_t index, uint8_t flags, uint16_t seg, uint32_t offset)
 {
 	idt[index].offset_low_16 = offset & 0x0000FFFF;
 	idt[index].offset_upp_16 = offset & 0xFFFF0000;
+	idt[index].segment_selector = seg;
 	idt[index].type_and_attr = flags;
 }
 
@@ -139,38 +140,38 @@ extern void isr_31();
 
 void enable_some_irq_handlers()
 {
-	set_irq_handler(0x00, 0x8E, (uint32_t)isr_0);
-	set_irq_handler(0x01, 0x8E, (uint32_t)isr_1);
-	set_irq_handler(0x02, 0x8E, (uint32_t)isr_2);
-	set_irq_handler(0x03, 0x8E, (uint32_t)isr_3);
-	set_irq_handler(0x04, 0x8E, (uint32_t)isr_4);
-	set_irq_handler(0x05, 0x8E, (uint32_t)isr_5);
-	set_irq_handler(0x06, 0x8E, (uint32_t)isr_6);
-	set_irq_handler(0x07, 0x8E, (uint32_t)isr_7);
-	set_irq_handler(0x08, 0x8E, (uint32_t)isr_8);
-	set_irq_handler(0x09, 0x8E, (uint32_t)isr_9);
-	set_irq_handler(0x0A, 0x8E, (uint32_t)isr_10);
-	set_irq_handler(0x0B, 0x8E, (uint32_t)isr_11);
-	set_irq_handler(0x0C, 0x8E, (uint32_t)isr_12);
-	set_irq_handler(0x0D, 0x8E, (uint32_t)isr_13);
-	set_irq_handler(0x0E, 0x8E, (uint32_t)isr_14);
-	set_irq_handler(0x0F, 0x8E, (uint32_t)isr_15);
-	set_irq_handler(0x10, 0x8E, (uint32_t)isr_16);
-	set_irq_handler(0x11, 0x8E, (uint32_t)isr_17);
-	set_irq_handler(0x12, 0x8E, (uint32_t)isr_18);
-	set_irq_handler(0x13, 0x8E, (uint32_t)isr_19);
-	set_irq_handler(0x14, 0x8E, (uint32_t)isr_20);
-	set_irq_handler(0x15, 0x8E, (uint32_t)isr_21);
-	set_irq_handler(0x16, 0x8E, (uint32_t)isr_22);
-	set_irq_handler(0x17, 0x8E, (uint32_t)isr_23);
-	set_irq_handler(0x18, 0x8E, (uint32_t)isr_24);
-	set_irq_handler(0x19, 0x8E, (uint32_t)isr_25);
-	set_irq_handler(0x1A, 0x8E, (uint32_t)isr_26);
-	set_irq_handler(0x1B, 0x8E, (uint32_t)isr_27);
-	set_irq_handler(0x1C, 0x8E, (uint32_t)isr_28);
-	set_irq_handler(0x1D, 0x8E, (uint32_t)isr_29);
-	set_irq_handler(0x1E, 0x8E, (uint32_t)isr_30);
-	set_irq_handler(0x1F, 0x8E, (uint32_t)isr_31);
+	set_irq_handler(0x00, 0x8E, 0x08, (uint32_t)isr_0);
+	set_irq_handler(0x01, 0x8E, 0x08, (uint32_t)isr_1);
+	set_irq_handler(0x02, 0x8E, 0x08, (uint32_t)isr_2);
+	set_irq_handler(0x03, 0x8E, 0x08, (uint32_t)isr_3);
+	set_irq_handler(0x04, 0x8E, 0x08, (uint32_t)isr_4);
+	set_irq_handler(0x05, 0x8E, 0x08, (uint32_t)isr_5);
+	set_irq_handler(0x06, 0x8E, 0x08, (uint32_t)isr_6);
+	set_irq_handler(0x07, 0x8E, 0x08, (uint32_t)isr_7);
+	set_irq_handler(0x08, 0x8E, 0x08, (uint32_t)isr_8);
+	set_irq_handler(0x09, 0x8E, 0x08, (uint32_t)isr_9);
+	set_irq_handler(0x0A, 0x8E, 0x08, (uint32_t)isr_10);
+	set_irq_handler(0x0B, 0x8E, 0x08, (uint32_t)isr_11);
+	set_irq_handler(0x0C, 0x8E, 0x08, (uint32_t)isr_12);
+	set_irq_handler(0x0D, 0x8E, 0x08, (uint32_t)isr_13);
+	set_irq_handler(0x0E, 0x8E, 0x08, (uint32_t)isr_14);
+	set_irq_handler(0x0F, 0x8E, 0x08, (uint32_t)isr_15);
+	set_irq_handler(0x10, 0x8E, 0x08, (uint32_t)isr_16);
+	set_irq_handler(0x11, 0x8E, 0x08, (uint32_t)isr_17);
+	set_irq_handler(0x12, 0x8E, 0x08, (uint32_t)isr_18);
+	set_irq_handler(0x13, 0x8E, 0x08, (uint32_t)isr_19);
+	set_irq_handler(0x14, 0x8E, 0x08, (uint32_t)isr_20);
+	set_irq_handler(0x15, 0x8E, 0x08, (uint32_t)isr_21);
+	set_irq_handler(0x16, 0x8E, 0x08, (uint32_t)isr_22);
+	set_irq_handler(0x17, 0x8E, 0x08, (uint32_t)isr_23);
+	set_irq_handler(0x18, 0x8E, 0x08, (uint32_t)isr_24);
+	set_irq_handler(0x19, 0x8E, 0x08, (uint32_t)isr_25);
+	set_irq_handler(0x1A, 0x8E, 0x08, (uint32_t)isr_26);
+	set_irq_handler(0x1B, 0x8E, 0x08, (uint32_t)isr_27);
+	set_irq_handler(0x1C, 0x8E, 0x08, (uint32_t)isr_28);
+	set_irq_handler(0x1D, 0x8E, 0x08, (uint32_t)isr_29);
+	set_irq_handler(0x1E, 0x8E, 0x08, (uint32_t)isr_30);
+	set_irq_handler(0x1F, 0x8E, 0x08, (uint32_t)isr_31);
 }
 
 void idt_init()

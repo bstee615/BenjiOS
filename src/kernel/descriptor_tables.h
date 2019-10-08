@@ -2,6 +2,7 @@
 #define DESCRIPTOR_TABLES_H
 
 #include "stdint.h"
+#include "regs.h"
 
 // GDT
 struct gdt_segment_descriptor_t
@@ -86,17 +87,9 @@ extern void load_idt(uint32_t addr);
 idt_descriptor_t idt[NUM_IRQS];
 idt_ptr_t idt_ptr;
 
-void set_irq_handler(uint8_t index, uint8_t flags, uint32_t offset);
+void set_irq_handler(uint8_t index, uint8_t flags, uint16_t seg, uint32_t offset);
 void idt_init();
 
-/* This defines what the stack looks like after an ISR was running */
-struct regs
-{
-	unsigned int gs, fs, es, ds;						 /* pushed the segs last */
-	unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; /* pushed by 'pusha' */
-	unsigned int int_no, err_code;						 /* our 'push byte #' and ecodes do this */
-	unsigned int eip, cs, eflags, useresp, ss;			 /* pushed by the processor automatically */
-};
 void fault_handler(struct regs *r);
 
 #endif

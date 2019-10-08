@@ -11,6 +11,7 @@
 #include "serial.h"
 #include "io.h"
 #include "irq.h"
+#include "timer.h"
 
 // Initialize core services that require IRQ and NMI to be disabled.
 void sys_init()
@@ -20,6 +21,7 @@ void sys_init()
 
 	pm_init(); // Initializes the GDT, too
 	idt_init();
+	irq_install();
 
 	enable_irq();
 	enable_nmi();
@@ -37,4 +39,9 @@ void kmain()
 
 	// """"""""""user"""""""""" code
 	term_printf("Hello, world!\n%s version %d.", "Welcome to BenjiOS", 1);
+
+	// serial_printf("%d\n", 5 / 0);
+
+	// timer_phase(18);
+	// timer_install();
 }

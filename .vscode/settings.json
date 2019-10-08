@@ -1,7 +1,9 @@
 {
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
-        "serial.h": "c"
+        "*.html": "html",
+        "serial.h": "c",
+        "timer.h": "c"
     },
     "terminal.integrated.cwd": "src"
 }
