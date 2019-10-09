@@ -3,6 +3,7 @@
 
 #include "monitor.h"
 #include "../descriptor_tables/dt.h"
+#include "../descriptor_tables/timer.h"
 
 struct multiboot
 {
@@ -19,6 +20,10 @@ int main(multiboot_t *mboot_ptr)
     init_descriptor_tables();
 
     asm volatile("int $0x4");
+    asm volatile("int $0x20");
+
+    asm volatile("sti");
+    init_timer(50);
 
     // All our initialisation calls will go in here.
     return 0xDEADBABA;

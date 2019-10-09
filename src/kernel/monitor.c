@@ -145,10 +145,18 @@ void monitor_write(char *c)
 
 void monitor_writedecimal(uint32_t n)
 {
-    while (n > 0)
+    uint32_t r = 0;
+    while (r < n)
     {
-        monitor_put('0' + n);
-        n = n / 10;
+        r = r * 10;
+        r += n % 10;
+        n /= 10;
+    }
+
+    while (r > 0)
+    {
+        monitor_put('0' + r % 10);
+        r /= 10;
     }
 }
 
