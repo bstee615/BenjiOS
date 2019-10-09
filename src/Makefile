@@ -19,7 +19,7 @@ INCLUDE = $(addprefix -I, $(HEADERS))
 
 KERNEL = $(addprefix kernel/, boot main common monitor)
 LIBC = $(addprefix libc/, )
-DT = $(addprefix descriptor_tables/, dt gdt gdt_flush)
+DT = $(addprefix descriptor_tables/, dt gdt gdt_flush idt)
 
 SRC = $(KERNEL) $(LIBC) $(DT) # Add chunks of source here.
 OBJ = $(addsuffix .o, $(SRC))
