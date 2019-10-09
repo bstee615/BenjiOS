@@ -15,4 +15,7 @@ void monitor_clear();
 // Output a null-terminated ASCII string to the monitor.
 void monitor_write(char *c);
 
+// Output a number in decimal form to the monitor.
+void monitor_writedecimal(uint32_t n);
+
 #endif // MONITOR_H

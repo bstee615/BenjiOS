@@ -19,7 +19,7 @@ INCLUDE = $(addprefix -I, $(HEADERS))
 
 KERNEL = $(addprefix kernel/, boot main common monitor)
 LIBC = $(addprefix libc/, )
-DT = $(addprefix descriptor_tables/, dt gdt gdt_flush idt)
+DT = $(addprefix descriptor_tables/, dt gdt gdt_flush idt idt_flush isr_wrapper isr_handlers isr)
 
 SRC = $(KERNEL) $(LIBC) $(DT) # Add chunks of source here.
 OBJ = $(addsuffix .o, $(SRC))
@@ -48,14 +48,9 @@ img: os pre-img
 
 # Delete all generated files.
 clean:
-	rm -r $(ISODIR)/boot/*.bin 2> /dev/null || true
-	rm -r $(OBJDIR)/*.o 2> /dev/null || true
-	rm -r $(OBJDIR)/kernel/*.o 2> /dev/null || true
-	rm -r $(OBJDIR)/libc/*.o 2> /dev/null || true
-	rm -r $(BINDIR)/*.bin 2> /dev/null || true
-	rm -r $(BINDIR)/*.iso 2> /dev/null || true
-	rm -r $(ISODIR)/*.bin 2> /dev/null || true
-	rm -r $(ISODIR)/*.iso 2> /dev/null || true
+	rm -r $(ISODIR)/**/*.bin 2> /dev/null || true
+	rm -r $(BINDIR)/**/*.bin 2> /dev/null || true
+	rm -r $(OBJDIR)/**/*.o 2> /dev/null || true
 
 # Create or check existence of directories for object files.
 objdirs:

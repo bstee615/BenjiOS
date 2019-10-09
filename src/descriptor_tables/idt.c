@@ -1,4 +1,6 @@
 #include "idt.h"
+#include "../kernel/monitor.h"
+#include "isr.h"
 
 #define NUM_ISR 256
 idt_entry_t idt[NUM_ISR];
@@ -22,9 +24,12 @@ void init_idt()
     }
 
     // TODO: Load some valid entries
+    load_idt_entry(4, (uint32_t)isr4, 0x08, 0x8E);
 
     idt_ptr_t idt_ptr;
     idt_ptr.size = (NUM_ISR * sizeof(idt_entry_t)) - 1;
     idt_ptr.offset = (uint32_t)&idt;
     idt_flush((uint32_t)&idt_ptr);
+
+    monitor_write("Initialized the IDT\n");
 }

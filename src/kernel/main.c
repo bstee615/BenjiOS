@@ -18,6 +18,8 @@ int main(multiboot_t *mboot_ptr)
 
     init_descriptor_tables();
 
+    asm volatile("int $0x4");
+
     // All our initialisation calls will go in here.
     return 0xDEADBABA;
 }

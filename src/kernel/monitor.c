@@ -143,12 +143,16 @@ void monitor_write(char *c)
     }
 }
 
-void monitor_write_hex(uint32_t n)
+void monitor_writedecimal(uint32_t n)
 {
-    // TODO: implement this yourself!
+    while (n > 0)
+    {
+        monitor_put('0' + n);
+        n = n / 10;
+    }
 }
 
-void monitor_write_dec(uint32_t n)
+void monitor_write_hex(uint32_t n)
 {
     // TODO: implement this yourself!
 }
