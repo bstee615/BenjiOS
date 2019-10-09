@@ -15,10 +15,10 @@ void load_idt_entry(int index, uint32_t offset, uint16_t selector, uint8_t type_
 
 void init_idt()
 {
-    // Load "not present" into all slots of IDT
+    // Load null entries into all slots of IDT
     for (int i = 0; i < NUM_ISR; i++)
     {
-        load_idt_entry(i, 0, 0x8, 0x0E);
+        load_idt_entry(i, 0, 0, 0);
     }
 
     // TODO: Load some valid entries
