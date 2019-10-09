@@ -19,21 +19,21 @@ INCLUDE = $(addprefix -I, $(HEADERS))
 
 KERNEL = $(addprefix kernel/, boot main common monitor)
 LIBC = $(addprefix libc/, )
-DT = $(addprefix descriptor_tables/, dt gdt_flush)
+DT = $(addprefix descriptor_tables/, dt gdt gdt_flush)
 
 SRC = $(KERNEL) $(LIBC) $(DT) # Add chunks of source here.
 OBJ = $(addsuffix .o, $(SRC))
 
 XORRISO = ../tools/xorriso-1.4.6/xorriso/xorriso
 CC = ../tools/opt/cross/bin/i686-elf-gcc
-FLAGS = -ffreestanding -std=gnu99 -nostdlib -g
+FLAGS = -Wall -Werror -ffreestanding -std=gnu99 -nostdlib -g
 
 # echo $(call notice_me, "")
 define notice_me
 echo "$(RED)$(1)$(NC)"
 endef
 
-default: img
+default: os
 
 urn:
 	echo "They'll do that for you when you're dead, dummy."

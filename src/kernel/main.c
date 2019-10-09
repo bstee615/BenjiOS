@@ -4,7 +4,14 @@
 #include "monitor.h"
 #include "../descriptor_tables/dt.h"
 
-int main(struct multiboot *mboot_ptr)
+struct multiboot
+{
+
+}
+__attribute((packed));
+typedef struct multiboot multiboot_t;
+
+int main(multiboot_t *mboot_ptr)
 {
     monitor_clear();
     monitor_write("Hello, world!\n");
