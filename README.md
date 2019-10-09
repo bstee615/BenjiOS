@@ -14,5 +14,7 @@ The tools I'm currently running:
 
 Each of these tools must be built from source to target the same architecture. The current target architecture I'm using is `i686-elf-gcc`. Check [here](https://wiki.osdev.org/GCC_Cross-Compiler) for boilerplate configurations when building from source.
 
+Following [JamesM's](http://www.jamesmolloy.co.uk/tutorial_html/) tutorial and [Bran's](http://www.osdever.net/bkerndev/Docs/intro.htm) tutorial.
+
 Cheers!
 - Benji

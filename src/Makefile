@@ -19,14 +19,13 @@ INCLUDE = $(addprefix -I, $(HEADERS))
 
 KERNEL = $(addprefix kernel/, boot main common monitor)
 LIBC = $(addprefix libc/, )
-# TEST = $(addprefix test/, test_irq)
+DT = $(addprefix descriptor_tables/, dt gdt_flush)
 
-SRC = $(KERNEL) $(LIBC) #$(TEST) # Add chunks of source here.
+SRC = $(KERNEL) $(LIBC) $(DT) # Add chunks of source here.
 OBJ = $(addsuffix .o, $(SRC))
 
 XORRISO = ../tools/xorriso-1.4.6/xorriso/xorriso
 CC = ../tools/opt/cross/bin/i686-elf-gcc
-QEMU = qemu-system-i386
 FLAGS = -ffreestanding -std=gnu99 -nostdlib -g
 
 # echo $(call notice_me, "")
@@ -47,16 +46,7 @@ img: os pre-img
 	if rm $(ISOPATH) 2> /dev/null; then $(call notice_me, "grub-mkrescue: removed previous image: $(OS).iso."); fi
 	grub-mkrescue -o $(ISOPATH) --xorriso=$(XORRISO) $(ISODIR)
 
-qemu: img
-	$(QEMU) -serial file:qemu_serial.log -cdrom $(ISOPATH)
-
-qemu-d: img
-	objcopy --only-keep-debug $(IMGPATH) $(IMGDIR)/$(OS).sym
-	$(QEMU) -s -S -serial file:qemu_serial.log $(ISOPATH)
-
-qemu-monitor: img
-	$(QEMU) -monitor stdio -serial file:qemu_serial.log $(ISOPATH)
-
+# Delete all generated files.
 clean:
 	rm -r $(ISODIR)/boot/*.bin 2> /dev/null || true
 	rm -r $(OBJDIR)/*.o 2> /dev/null || true
@@ -81,7 +71,20 @@ pre-os:
 os: all pre-os
 	$(CC) $(FLAGS) -T linker.ld $(patsubst %.o,$(OBJDIR)/%.o,$(OBJ)) -o $(BINDIR)/$(IMG) -lgcc
 
+# Pattern matching for ASM/C files.
 %.o: %.s
 	nasm -f elf32 $< -o $(OBJDIR)/$@
 %.o: %.c
 	$(CC) $(FLAGS) $(INCLUDE) -c $< -o $(OBJDIR)/$@
+
+QEMU = qemu-system-i386
+
+qemu: img
+	$(QEMU) -serial file:qemu_serial.log -cdrom $(ISOPATH)
+
+qemu-d: img
+	objcopy --only-keep-debug $(IMGPATH) $(IMGDIR)/$(OS).sym
+	$(QEMU) -s -S -serial file:qemu_serial.log $(ISOPATH)
+
+qemu-monitor: img
+	$(QEMU) -monitor stdio -serial file:qemu_serial.log $(ISOPATH)
