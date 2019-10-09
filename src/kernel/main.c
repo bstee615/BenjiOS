@@ -8,7 +8,7 @@ struct multiboot
 {
 
 }
-__attribute((packed));
+__attribute__((packed));
 typedef struct multiboot multiboot_t;
 
 int main(multiboot_t *mboot_ptr)
