@@ -14,14 +14,16 @@ NC = \033[0m
 
 IMG = $(OS).bin
 
-HEADERS = libc libc/stdlib kernel #test
+HEADERS = kernel libc descriptor_tables io common #test
 INCLUDE = $(addprefix -I, $(HEADERS))
 
-KERNEL = $(addprefix kernel/, boot main common monitor)
+KERNEL = $(addprefix kernel/, boot main)
 LIBC = $(addprefix libc/, )
 DT = $(addprefix descriptor_tables/, dt gdt gdt_flush idt idt_flush isr_wrapper isr_handlers isr timer)
+IO = $(addprefix io/, monitor)
+COMMON = $(addprefix common/, common)
 
-SRC = $(KERNEL) $(LIBC) $(DT) # Add chunks of source here.
+SRC = $(KERNEL) $(LIBC) $(DT) $(IO) $(COMMON)
 OBJ = $(addsuffix .o, $(SRC))
 
 XORRISO = ../tools/xorriso-1.4.6/xorriso/xorriso
@@ -50,7 +52,7 @@ img: os pre-img
 clean:
 	rm -r $(ISODIR)/**/*.bin 2> /dev/null || true
 	rm -r $(BINDIR)/**/*.bin 2> /dev/null || true
-	rm -r $(OBJDIR)/**/*.o 2> /dev/null || true
+	echo $(HEADERS) | tr " " "\n" | while read -r dirname; do rm -r $(OBJDIR)/$$dirname; done
 
 # Create or check existence of directories for object files.
 objdirs:

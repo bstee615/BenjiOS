@@ -1,5 +1,5 @@
 #include "idt.h"
-#include "../kernel/monitor.h"
+#include "../io/monitor.h"
 #include "isr.h"
 
 #define NUM_ISR 256
