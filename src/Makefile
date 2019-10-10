@@ -14,7 +14,7 @@ NC = \033[0m
 
 IMG = $(OS).bin
 
-HEADERS = kernel libc descriptor_tables io common #test
+HEADERS = kernel libc/stdlib descriptor_tables io common #test
 INCLUDE = $(addprefix -I, $(HEADERS))
 
 KERNEL = $(addprefix kernel/, boot main)
@@ -51,7 +51,12 @@ img: os pre-img
 # Delete all generated files.
 clean:
 	rm -r $(ISODIR)/**/*.bin 2> /dev/null || true
+	rm -r $(ISODIR)/**/*.sym 2> /dev/null || true
+	rm -r $(ISODIR)/**/*.iso 2> /dev/null || true
+	rm -r $(ISODIR)/*.iso 2> /dev/null || true
+
 	rm -r $(BINDIR)/**/*.bin 2> /dev/null || true
+
 	echo $(HEADERS) | tr " " "\n" | while read -r dirname; do rm -r $(OBJDIR)/$$dirname; done
 
 # Create or check existence of directories for object files.
