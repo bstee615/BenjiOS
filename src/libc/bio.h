@@ -1,4 +1,4 @@
-// common.h -- Defines typedefs and some global functions.
+// Byte I/O - Low-level serial port reading & writing.
 // From JamesM's kernel development tutorials.
 
 #ifndef COMMON_H

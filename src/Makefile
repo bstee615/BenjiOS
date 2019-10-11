@@ -14,16 +14,15 @@ NC = \033[0m
 
 IMG = $(OS).bin
 
-HEADERS = kernel libc/stdlib descriptor_tables io common #test
+HEADERS = kernel libc libc/stdlib descriptor_tables io #test
 INCLUDE = $(addprefix -I, $(HEADERS))
 
 KERNEL = $(addprefix kernel/, boot main)
-LIBC = $(addprefix libc/, )
+LIBC = $(addprefix libc/, bio)
 DT = $(addprefix descriptor_tables/, dt gdt gdt_flush idt idt_flush isr_wrapper isr_handlers isr timer)
 IO = $(addprefix io/, monitor)
-COMMON = $(addprefix common/, common)
 
-SRC = $(KERNEL) $(LIBC) $(DT) $(IO) $(COMMON)
+SRC = $(KERNEL) $(LIBC) $(DT) $(IO)
 OBJ = $(addsuffix .o, $(SRC))
 
 XORRISO = ../tools/xorriso-1.4.6/xorriso/xorriso
