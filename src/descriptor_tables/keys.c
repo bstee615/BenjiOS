@@ -6,27 +6,13 @@
 #define PS2_ECHO 0xEE
 #define PS2_ACK 0xFA
 
+const char *keys = "?1234567890-=?\tqwertyuiop[]\n?asdfghjkl;'`?\\zxcvbnm,./?";
+
 void process_scancode(uint8_t code)
 {
-    switch (code)
+    if (code >= 0x01 && code <= 0x36)
     {
-    case 0x2:
-    case 0x3:
-    case 0x4:
-    case 0x5:
-    case 0x6:
-    case 0x7:
-    case 0x8:
-    case 0x9:
-    case 0xA:
-        printf(0, "%d", code - 1);
-        break;
-    case 0xB:
-        printf(0, "%d", 0);
-        break;
-    default:
-        // printf(0, "Unrecognized keycode %x\n", code);
-        break;
+        printf(0, "%c", keys[code - 1]);
     }
 }
 
