@@ -139,8 +139,3 @@ void monitor_puts(const char *c)
         monitor_putc(c[i++]);
     }
 }
-
-void monitor_write_hex(uint32_t n)
-{
-    // TODO: implement this yourself!
-}

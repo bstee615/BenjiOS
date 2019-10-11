@@ -22,6 +22,8 @@ int main(multiboot_t *mboot_ptr)
 
     pic_clear_irq_mask(1);
 
+    printf(0, "Decimal %d Hex %x\n", 36, 36);
+
     init_timer(50);
     asm volatile("sti");
 

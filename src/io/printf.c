@@ -9,9 +9,9 @@ typedef void (*puts_cb)(const char *c);
 void putint(putc_cb putc, int n)
 {
     int r = 0;
-    while (r < n)
+    while (n > 0)
     {
-        r = r * 10;
+        r *= 10;
         r += n % 10;
         n /= 10;
     }
@@ -20,6 +20,35 @@ void putint(putc_cb putc, int n)
     {
         putc('0' + r % 10);
         r /= 10;
+    }
+}
+
+void putint_hex(putc_cb putc, int n)
+{
+    putc('(');
+    putint(putc, n);
+    putc(')');
+
+    int r = 0;
+    while (n > 0)
+    {
+        r = r * 16;
+        r += n % 16;
+        n /= 16;
+    }
+
+    while (r > 0)
+    {
+        int digit = r % 16;
+        if (digit > 9)
+        {
+            putc('A' + digit - 10);
+        }
+        else
+        {
+            putc('0' + digit);
+        }
+        r /= 16;
     }
 }
 
@@ -34,6 +63,9 @@ void generic_printf(putc_cb putc, puts_cb puts, const char *fmt, va_list valist)
             {
             case 'd':
                 putint(putc, va_arg(valist, int));
+                break;
+            case 'x':
+                putint_hex(putc, va_arg(valist, int));
                 break;
             case 's':
                 puts(va_arg(valist, char *));
