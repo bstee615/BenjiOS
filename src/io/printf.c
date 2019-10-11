@@ -97,6 +97,9 @@ void generic_printf(putc_cb putc, puts_cb puts, const char *fmt, va_list valist)
             case 'x':
                 putint_hex(putc, va_arg(valist, int));
                 break;
+            case 'c':
+                putc(va_arg(valist, int));
+                break;
             case 's':
                 puts(va_arg(valist, char *));
                 break;
