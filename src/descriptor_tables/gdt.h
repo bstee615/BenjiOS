@@ -25,7 +25,10 @@ struct gdt_ptr_struct
 __attribute__((packed));
 typedef struct gdt_ptr_struct gdt_ptr_t;
 
-extern void gdt_flush(uint32_t);
+// Load a reference to the location of the GDT
+extern void gdt_flush(uint32_t gdt_ptr_addr);
+
+// Initialize the GDT
 void init_gdt();
 
 #endif

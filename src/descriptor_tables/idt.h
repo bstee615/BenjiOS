@@ -3,6 +3,7 @@
 
 #include "stdint.h"
 
+// And entry for the Interrupt Descriptor Table
 struct idt_entry
 {
     uint16_t offset_lo; // offset bits 0..15
@@ -14,6 +15,7 @@ struct idt_entry
 __attribute__((packed));
 typedef struct idt_entry idt_entry_t;
 
+// A pointer to the IDT
 struct idt_ptr
 {
     uint16_t size;
@@ -22,7 +24,10 @@ struct idt_ptr
 __attribute__((packed));
 typedef struct idt_ptr idt_ptr_t;
 
+// Load a reference to the location of the IDT
 extern void idt_flush(uint32_t);
+
+// Initialize the IDT
 void init_idt();
 
 #endif

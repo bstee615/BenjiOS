@@ -6,6 +6,7 @@
 // Initialize the serial logging port.
 void serial_init();
 
+// Put a character out to the serial logging port.
 void serial_putc(char c);
 
 // Print a formatted string to the serial logging port in white.

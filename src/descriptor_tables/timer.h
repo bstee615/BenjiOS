@@ -6,6 +6,7 @@
 
 #include "common.h"
 
+// Initialize the timer to a certain
 void init_timer(uint32_t frequency);
 
 #endif
