@@ -4,6 +4,7 @@
 
 #include "../io/monitor.h"
 #include <stdint.h>
+#include <stdarg.h>
 
 // The VGA framebuffer starts at 0xB8000.
 uint16_t *video_memory = (uint16_t *)0xB8000;
@@ -53,7 +54,7 @@ static void scroll()
 }
 
 // Writes a single character out to the screen.
-void monitor_put(char c)
+void putc(char c)
 {
     // The background colour is black (0), the foreground is white (15).
     uint8_t backColour = 0;
@@ -115,7 +116,7 @@ void monitor_put(char c)
 }
 
 // Clears the screen, by copying lots of spaces to the framebuffer.
-void monitor_clear()
+void cls()
 {
     // Make an attribute byte for the default colours
     uint8_t attributeByte = (0 /*black*/ << 4) | (15 /*white*/ & 0x0F);
@@ -139,7 +140,7 @@ void monitor_write(char *c)
     int i = 0;
     while (c[i])
     {
-        monitor_put(c[i++]);
+        putc(c[i++]);
     }
 }
 
@@ -155,7 +156,7 @@ void monitor_writedecimal(uint32_t n)
 
     while (r > 0)
     {
-        monitor_put('0' + r % 10);
+        putc('0' + r % 10);
         r /= 10;
     }
 }
@@ -163,4 +164,46 @@ void monitor_writedecimal(uint32_t n)
 void monitor_write_hex(uint32_t n)
 {
     // TODO: implement this yourself!
+}
+
+void printf(const char *fmt, ...)
+{
+    va_list valist;
+
+    char *c;
+    int num_fmts = 0;
+    for (c = (char *)fmt; *c != 0; c++)
+    {
+        if (*c == '%')
+            num_fmts++;
+    }
+
+    /* initialize valist for num number of arguments */
+    va_start(valist, fmt);
+
+    for (c = (char *)fmt; *c != 0; c++)
+    {
+        if (*c == '%')
+        {
+            c++; // Move c to point at the format specifier.
+            switch (*c)
+            {
+            case 'd':
+                monitor_writedecimal(va_arg(valist, int));
+                break;
+            case 's':
+                monitor_write(va_arg(valist, char *));
+                break;
+            }
+        }
+        else
+        {
+            putc(*c);
+        }
+    }
+
+    /* clean memory reserved for valist */
+    va_end(valist);
+
+    move_cursor();
 }

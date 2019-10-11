@@ -32,5 +32,5 @@ void init_gdt()
     gdt_ptr.base = (uint32_t)&gdt;
     gdt_flush((uint32_t)&gdt_ptr);
 
-    monitor_write("Initialized the GDT\n");
+    printf("Initialized the GDT\n");
 }

@@ -14,8 +14,8 @@ typedef struct multiboot multiboot_t;
 
 int main(multiboot_t *mboot_ptr)
 {
-    monitor_clear();
-    monitor_write("Hello, world!\n");
+    cls();
+    printf("Hello, world!\n");
 
     init_descriptor_tables();
 

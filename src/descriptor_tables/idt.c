@@ -64,5 +64,5 @@ void init_idt()
     idt_ptr.offset = (uint32_t)&idt;
     idt_flush((uint32_t)&idt_ptr);
 
-    monitor_write("Initialized the IDT\n");
+    printf("Initialized the IDT\n");
 }

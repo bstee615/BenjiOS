@@ -3,9 +3,7 @@
 
 void isr_handler(registers_t regs)
 {
-    monitor_write("recieved interrupt: ");
-    monitor_writedecimal(regs.int_no);
-    monitor_put('\n');
+    printf("recieved interrupt: %d\n", regs.int_no);
 }
 
 isr_t irqs[256];
@@ -29,9 +27,7 @@ void irq_handler(registers_t regs)
     }
     else
     {
-        monitor_write("unregistered interrupt occured:");
-        monitor_writedecimal(regs.int_no);
-        monitor_write("\n");
+        printf("unregistered interrupt occured: %d\n", regs.int_no);
     }
 }
 
