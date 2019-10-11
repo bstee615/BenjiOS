@@ -1,3 +1,5 @@
+// Interrupt Descriptor Table
+
 #ifndef IDT_H
 #define IDT_H
 

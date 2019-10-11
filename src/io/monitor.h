@@ -1,10 +1,10 @@
-// monitor.h -- Defines the interface for monitor.h
-//              From JamesM's kernel development tutorials.
+// Defines the interface for printing to the monitor.
+// From JamesM's kernel development tutorials.
 
 #ifndef MONITOR_H
 #define MONITOR_H
 
-#include "common.h"
+#include "bio.h"
 
 // Write a single character out to the screen.
 void putc(char c);

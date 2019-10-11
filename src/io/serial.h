@@ -1,3 +1,5 @@
+// Output to serial logging port
+
 #ifndef SERIAL_H
 #define SERIAL_H
 
