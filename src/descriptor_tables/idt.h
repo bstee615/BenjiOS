@@ -27,6 +27,7 @@ __attribute__((packed));
 typedef struct idt_ptr idt_ptr_t;
 
 // Load a reference to the location of the IDT
+// Defined in idt_flush.s
 extern void idt_flush(uint32_t);
 
 // Initialize the IDT

@@ -42,7 +42,9 @@ void irq_handler(registers_t args);
 typedef void (*isr_t)(registers_t);
 void register_interrupt_handler(uint8_t n, isr_t handler);
 
-// stubs for IRQ handlers
+// ---------------- Defined in isr_handlers.s ---------------
+
+// Declarations for IRQ handlers
 extern void irq0();
 extern void irq1();
 extern void irq2();
@@ -60,6 +62,7 @@ extern void irq13();
 extern void irq14();
 extern void irq15();
 
+// Declarations for ISR handlers
 extern void isr0();
 extern void isr1();
 extern void isr2();

@@ -30,17 +30,8 @@ void remap_irqs()
     outb(0xA1, 0x0);
 }
 
-void init_idt()
+void load_idt_entries()
 {
-    // Load null entries into all slots of IDT
-    for (int i = 0; i < NUM_ISR; i++)
-    {
-        load_idt_entry(i, 0, 0, 0);
-    }
-
-    remap_irqs();
-
-    // TODO: Load some valid entries
     load_idt_entry(4, (uint32_t)isr4, 0x08, 0x8E);
 
     load_idt_entry(32, (uint32_t)irq0, 0x08, 0x8E);
@@ -59,6 +50,19 @@ void init_idt()
     load_idt_entry(45, (uint32_t)irq13, 0x08, 0x8E);
     load_idt_entry(46, (uint32_t)irq14, 0x08, 0x8E);
     load_idt_entry(47, (uint32_t)irq15, 0x08, 0x8E);
+}
+
+void init_idt()
+{
+    // Load null entries into all slots of IDT
+    for (int i = 0; i < NUM_ISR; i++)
+    {
+        load_idt_entry(i, 0, 0, 0);
+    }
+
+    remap_irqs();
+
+    load_idt_entries();
 
     idt_ptr_t idt_ptr;
     idt_ptr.size = (NUM_ISR * sizeof(idt_entry_t)) - 1;
