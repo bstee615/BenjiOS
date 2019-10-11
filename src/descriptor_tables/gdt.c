@@ -1,5 +1,5 @@
 #include "gdt.h"
-#include "../io/monitor.h"
+#include "monitor.h"
 
 #define NUM_SEGMENTS 5
 gdt_entry_t gdt[NUM_SEGMENTS];

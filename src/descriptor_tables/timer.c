@@ -3,7 +3,7 @@
 
 #include "timer.h"
 #include "isr.h"
-#include "../io/monitor.h"
+#include "monitor.h"
 
 uint32_t tick = 0;
 

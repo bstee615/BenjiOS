@@ -4,7 +4,7 @@
 #ifndef MONITOR_H
 #define MONITOR_H
 
-#include "../common/common.h"
+#include "common.h"
 
 // Write a single character out to the screen.
 void putc(char c);

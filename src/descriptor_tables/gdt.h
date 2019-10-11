@@ -1,7 +1,7 @@
 #ifndef GDT_H
 #define GDT_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 // An entry for the Global Descriptor Table
 struct gdt_entry

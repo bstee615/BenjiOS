@@ -1,7 +1,7 @@
 // common.c -- Defines some global functions.
 // From JamesM's kernel development tutorials.
 
-#include "../common/common.h"
+#include "common.h"
 
 // Write a byte out to the specified port.
 void outb(uint16_t port, uint8_t value)

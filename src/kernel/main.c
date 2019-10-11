@@ -1,9 +1,9 @@
 // main.c -- Defines the C-code kernel entry point, calls initialisation routines.
 // Made for JamesM's tutorials
 
-#include "../io/monitor.h"
-#include "../descriptor_tables/dt.h"
-#include "../descriptor_tables/timer.h"
+#include "monitor.h"
+#include "dt.h"
+#include "timer.h"
 
 struct multiboot
 {

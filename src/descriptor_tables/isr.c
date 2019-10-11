@@ -1,5 +1,5 @@
 #include "isr.h"
-#include "../io/monitor.h"
+#include "monitor.h"
 
 void isr_handler(registers_t regs)
 {
