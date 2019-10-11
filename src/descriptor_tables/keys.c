@@ -12,7 +12,27 @@ void process_scancode(uint8_t code)
 {
     if (code >= 0x01 && code <= 0x36)
     {
-        printf(0, "%c", keys[code - 1]);
+        switch (code)
+        {
+        case 0x01:
+            printf(0, "<Esc>");
+            break;
+        case 0x0E:
+            printf(0, "<Bcksp>");
+            break;
+        case 0x2A:
+            printf(0, "<Lshift>");
+            break;
+        case 0x36:
+            printf(0, "<Rshift>");
+            break;
+        case 0x1D:
+            printf(0, "<Lctrl>");
+            break;
+        default:
+            printf(0, "%c", keys[code - 1]);
+            break;
+        }
     }
 }
 
