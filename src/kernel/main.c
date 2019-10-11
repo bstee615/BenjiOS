@@ -1,4 +1,5 @@
 #include "monitor.h"
+#include "ioutils.h"
 #include "dt.h"
 #include "timer.h"
 
@@ -11,8 +12,8 @@ typedef struct multiboot multiboot_t;
 
 int main(multiboot_t *mboot_ptr)
 {
-    cls();
-    printf("Hello, world!\n");
+    monitor_cls();
+    printf(0, "Hello, world!\n");
 
     init_descriptor_tables();
 

@@ -1,9 +1,10 @@
 #include "isr.h"
-#include "monitor.h"
+#include "ioutils.h"
+#include "bio.h"
 
 void isr_handler(registers_t regs)
 {
-    printf("recieved interrupt: %d\n", regs.int_no);
+    printf(0, "recieved interrupt: %d\n", regs.int_no);
 }
 
 isr_t irqs[256];
@@ -27,7 +28,7 @@ void irq_handler(registers_t regs)
     }
     else
     {
-        printf("unregistered interrupt occured: %d\n", regs.int_no);
+        printf(0, "unregistered interrupt occured: %d\n", regs.int_no);
     }
 }
 

@@ -7,12 +7,12 @@
 #include "bio.h"
 
 // Write a single character out to the screen.
-void putc(char c);
+void monitor_putc(char c);
+
+// Write a string out to the screen.
+void monitor_puts(const char *s);
 
 // Clear the screen to all black.
-void cls();
-
-// Print a formatted string to the terminal in white.
-void printf(const char *fmt, ...);
+void monitor_cls();
 
 #endif // MONITOR_H

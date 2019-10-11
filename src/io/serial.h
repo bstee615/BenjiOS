@@ -3,7 +3,7 @@
 #ifndef SERIAL_H
 #define SERIAL_H
 
-#include "io.h"
+#include "bio.h"
 
 // Initialize the serial logging port.
 void serial_init();
@@ -11,7 +11,7 @@ void serial_init();
 // Put a character out to the serial logging port.
 void serial_putc(char c);
 
-// Print a formatted string to the serial logging port in white.
-void serial_printf(const char *fmt, ...);
+// Put a string out to the serial logging port.
+void serial_puts(const char *str);
 
 #endif

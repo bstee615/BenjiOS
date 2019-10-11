@@ -1,5 +1,5 @@
 #include "gdt.h"
-#include "monitor.h"
+#include "ioutils.h"
 
 #define NUM_SEGMENTS 5
 gdt_entry_t gdt[NUM_SEGMENTS];
@@ -32,5 +32,5 @@ void init_gdt()
     gdt_ptr.base = (uint32_t)&gdt;
     gdt_flush((uint32_t)&gdt_ptr);
 
-    printf("Initialized the GDT\n");
+    printf(0, "Initialized the GDT\n");
 }

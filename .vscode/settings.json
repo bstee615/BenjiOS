@@ -1,6 +1,13 @@
 {
     "files.associations": {
         "*.html": "html",
+        "ioutils.h": "c",
+        "queue": "c",
+        "stack": "c",
+        "*.inc": "c",
+        "*.x": "c",
+        "*.mm": "c",
+        "random": "c"
     },
     "terminal.integrated.cwd": "src",
     "C_Cpp.errorSquiggles": "Disabled"

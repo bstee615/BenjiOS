@@ -1,13 +1,13 @@
 #include "timer.h"
 #include "isr.h"
-#include "monitor.h"
+#include "ioutils.h"
 
 uint32_t tick = 0;
 
 static void timer_callback(registers_t regs)
 {
     tick++;
-    printf("Tick: %d\n", tick);
+    printf(0, "Tick: %d\n", tick);
 }
 
 void init_timer(uint32_t frequency)

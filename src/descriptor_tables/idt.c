@@ -1,6 +1,7 @@
 #include "idt.h"
-#include "monitor.h"
+#include "ioutils.h"
 #include "isr.h"
+#include "bio.h"
 
 #define NUM_ISR 256
 idt_entry_t idt[NUM_ISR];
@@ -64,5 +65,5 @@ void init_idt()
     idt_ptr.offset = (uint32_t)&idt;
     idt_flush((uint32_t)&idt_ptr);
 
-    printf("Initialized the IDT\n");
+    printf(0, "Initialized the IDT\n");
 }
