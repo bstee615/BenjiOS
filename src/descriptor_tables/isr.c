@@ -1,6 +1,7 @@
 #include "isr.h"
 #include "printf.h"
 #include "bio.h"
+#include "pic.h"
 
 void isr_handler(registers_t regs)
 {
@@ -11,15 +12,7 @@ isr_t irqs[256];
 
 void irq_handler(registers_t regs)
 {
-    // Send an EOI (end of interrupt) signal to the PICs.
-    // If this interrupt involved the slave.
-    if (regs.int_no >= 40)
-    {
-        // Send reset signal to slave.
-        outb(0xA0, 0x20);
-    }
-    // Send reset signal to master. (As well as slave, if necessary).
-    outb(0x20, 0x20);
+    pic_send_eoi(regs.int_no);
 
     if (irqs[regs.int_no] != 0)
     {

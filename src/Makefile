@@ -17,7 +17,7 @@ IMG = $(OS).bin
 HEADERS = kernel libc libc/stdlib descriptor_tables io #test
 INCLUDE = $(addprefix -I, $(HEADERS))
 
-KERNEL = $(addprefix kernel/, boot main)
+KERNEL = $(addprefix kernel/, boot main pic)
 LIBC = $(addprefix libc/, bio)
 DT = $(addprefix descriptor_tables/, dt gdt gdt_flush idt idt_flush isr_wrapper isr_handlers isr timer)
 IO = $(addprefix io/, monitor serial printf)

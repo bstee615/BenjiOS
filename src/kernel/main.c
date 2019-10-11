@@ -2,6 +2,7 @@
 #include "printf.h"
 #include "dt.h"
 #include "timer.h"
+#include "pic.h"
 
 struct multiboot
 {
@@ -18,6 +19,8 @@ int main(multiboot_t *mboot_ptr)
     init_descriptor_tables();
 
     asm volatile("int $0x4");
+
+    pic_clear_irq_mask(1);
 
     init_timer(50);
     asm volatile("sti");

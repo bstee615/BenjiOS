@@ -7,7 +7,22 @@
         "*.inc": "c",
         "*.x": "c",
         "*.mm": "c",
-        "random": "c"
+        "random": "c",
+        "functional": "c",
+        "optional": "c",
+        "regex": "c",
+        "system_error": "c",
+        "type_traits": "c",
+        "xlocmon": "c",
+        "xtr1common": "c",
+        "*.tcc": "c",
+        "istream": "c",
+        "ostream": "c",
+        "ratio": "c",
+        "variant": "c",
+        "array": "c",
+        "tuple": "c",
+        "utility": "c"
     },
     "terminal.integrated.cwd": "src",
     "C_Cpp.errorSquiggles": "Disabled"
