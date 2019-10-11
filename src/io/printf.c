@@ -8,6 +8,14 @@ typedef void (*puts_cb)(const char *c);
 
 void putint(putc_cb putc, int n)
 {
+    int negative = 0;
+    if (n < 0)
+    {
+        negative = 1;
+        n = -n;
+    }
+    int last_digit_0 = (n % 10 == 0) ? 1 : 0;
+
     int r = 0;
     while (n > 0)
     {
@@ -16,19 +24,37 @@ void putint(putc_cb putc, int n)
         n /= 10;
     }
 
+    if (negative)
+    {
+        putc('-');
+    }
     while (r > 0)
     {
         putc('0' + r % 10);
         r /= 10;
     }
+    if (last_digit_0)
+    {
+        putc('0');
+    }
 }
 
 void putint_hex(putc_cb putc, int n)
 {
-    putc('(');
-    putint(putc, n);
-    putc(')');
+    int negative = 0;
+    if (n < 0)
+    {
+        negative = 1;
+        n = -n;
+    }
+    int last_digit_0 = (n % 16 == 0) ? 1 : 0;
 
+    if (negative)
+    {
+        putc('-');
+    }
+    putc('0');
+    putc('x');
     int r = 0;
     while (n > 0)
     {
@@ -49,6 +75,10 @@ void putint_hex(putc_cb putc, int n)
             putc('0' + digit);
         }
         r /= 16;
+    }
+    if (last_digit_0)
+    {
+        putc('0');
     }
 }
 
