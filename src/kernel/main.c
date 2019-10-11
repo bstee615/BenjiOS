@@ -3,6 +3,7 @@
 #include "dt.h"
 #include "timer.h"
 #include "pic.h"
+#include "keys.h"
 
 struct multiboot
 {
@@ -26,6 +27,7 @@ int main(multiboot_t *mboot_ptr)
     printf(0, "Zero %d\nZero in ones digit %d\nZero in ones digit hex %x\nNegative %d\n", 0, 40, 0x30, -3);
 
     init_timer(50);
+    init_keyboard();
     asm volatile("sti");
 
     // All our initialisation calls will go in here.
