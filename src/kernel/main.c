@@ -1,6 +1,3 @@
-// main.c -- Defines the C-code kernel entry point, calls initialisation routines.
-// Made for JamesM's tutorials
-
 #include "monitor.h"
 #include "dt.h"
 #include "timer.h"
